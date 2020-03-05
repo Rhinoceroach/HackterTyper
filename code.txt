@@ -1,0 +1,1565 @@
+// The "Geometry" class.
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create and test the shape class and its subclasses
+// Input: Keyboard
+// Output: Console/screen
+//---------------------------------------------------------------
+import java.awt.*;
+import java.lang.Math;
+import hsa.Console;
+
+public class Geometry
+{
+    static Console c;           // The output console
+
+    public static void main (String[] args)
+    {
+        c = new Console ();
+        char key = ' ';
+        int num;
+        int size;
+        Shape shape;
+        Shape[] shapes;
+        while (Character.toLowerCase (key) != 'x')
+        {
+            size = -1;
+            while (size <= 0)
+            {
+                c.print ("Please enter a positive number of shapes you would like: ");
+                size = c.readInt ();
+                if (size <= 0)
+                {
+                    c.println ("You did not enter a positive number. Please try again.");
+                }
+            }
+            shapes = new Shape [size];
+            for (int i = 0 ; i < size ; i++)
+            {
+                num = -1;
+                while (num > 9 || num < 0)
+                {
+                    c.println ("=======Shapes=======");
+                    c.println ("0) Circle");
+                    c.println ("1) Rectangle");
+                    c.println ("2) Triangle");
+                    c.println ("3) Regular Pentagon");
+                    c.println ("4) Regular Hexagon");
+                    c.println ("5) Regular Octagon");
+                    c.println ("6) Regular Decagon");
+                    c.println ("7) Sphere");
+                    c.println ("8) Rectangular Prism");
+                    c.println ("9) Cylinder");
+                    c.println ("=======Shapes=======");
+                    c.print ("Please enter a number from 0 - 9 to select a shape number " + (i + 1) + ": ");
+                    num = c.readInt ();
+                    if (num > 9 || num < 0)
+                    {
+                        c.println ("You did not enter a number between 0 - 9. Please try again.");
+                    }
+                }
+                if (num == 0)
+                {
+                    shape = new Circle ();
+                    c.println ("Shape number " + (i + 1) + " registered as a circle.");
+                }
+                else if (num == 1)
+                {
+                    shape = new Rectangle ();
+                    c.println ("Shape number " + (i + 1) + " registered as a rectangle.");
+                }
+                else if (num == 2)
+                {
+                    shape = new Triangle ();
+                    c.println ("Shape number " + (i + 1) + " registered as a triangle.");
+                }
+                else if (num == 3)
+                {
+                    shape = new RegularPentagon ();
+                    c.println ("Shape number " + (i + 1) + " registered as a regular pentagon.");
+                }
+                else if (num == 4)
+                {
+                    shape = new RegularHexagon ();
+                    c.println ("Shape number " + (i + 1) + " registered as a regular hexagon.");
+                }
+                else if (num == 5)
+                {
+                    shape = new RegularOctagon ();
+                    c.println ("Shape number " + (i + 1) + " registered as a regular octagon.");
+                }
+                else if (num == 6)
+                {
+                    shape = new RegularDecagon ();
+                    c.println ("Shape number " + (i + 1) + " registered as a regular decagon.");
+                }
+                else if (num == 7)
+                {
+                    shape = new Sphere ();
+                    c.println ("Shape number " + (i + 1) + " registered as a sphere.");
+                }
+                else if (num == 8)
+                {
+                    shape = new RectangularPrism ();
+                    c.println ("Shape number " + (i + 1) + " registered as a rectangular prism.");
+                }
+                else
+                {
+                    shape = new Cylinder ();
+                    c.println ("Shape number " + (i + 1) + " registered as a cylinder.");
+                }
+                shape.get (c);
+                shapes [i] = shape;
+                if (i + 1 < size)
+                {
+                    c.print ("Press any key to continue.");
+                    key = c.getChar ();
+                    c.clear ();
+                }
+            }
+            c.clear ();
+            for (int i = 0 ; i < size ; i++)
+            {
+                c.println ("Shape number " + (i + 1));
+                shapes [i].put (c);
+                c.println ();
+                if ((i - 1) % 2 == 0 && i != size - 1)
+                {
+                    c.print ("Press any key to continue...");
+                    key = c.getChar ();
+                    c.clear ();
+                }
+            }
+            c.println ();
+            c.print ("Please press 'x' to exit or any other key to retry.");
+            key = c.getChar ();
+            c.clear ();
+        }
+        // Place your program here.  'c' is the output console
+    } // main method
+} // Geometry class
+
+// ===========================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a shape class base
+// Fields:
+//      colour - contains the colour of the shape
+// Methods:
+//      get - gets the colour from a given Console
+//      put - prints the color of the Shape in a given Console
+// ===========================================================
+class Shape
+{
+    public String colour;
+
+    public Shape (String colour)
+    {
+        this.colour = colour;
+    }
+
+
+    public Shape ()
+    {
+        this.colour = "black";
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the colour from the user in a given Console
+    // Input: Parameters(Console c)
+    // Output: Changes this.colour
+    // ===========================================================
+    public void get (Console c)
+    {
+        c.print ("Please enter a colour for the shape: ");
+        this.colour = c.readString ();
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the colour in a given Console
+    // Input: Parameters(Console c)
+    // Output: Prints the colour in a given Console
+    // ===========================================================
+    public void put (Console c)
+    {
+        c.println ("Colour: " + colour);
+    }
+}
+
+
+// =======================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a class for 2D shapes
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+// Methods:
+//      abstract calcPerimeter - calculates the perimeter of the 2D shape
+//      abstract calcArea - calculates the area of the 2D shape
+//      get - gets the x and y coordinate and colour from a given Console
+//      put - prints the x and y coordinates and the color of the Shape in a given Console
+// =======================================================================================
+abstract class D2shape extends Shape
+{
+    public int locX;
+    public int locY;
+    abstract public double calcPerimeter ();
+    abstract public double calcArea ();
+
+    public D2shape (int x, int y, String colour)
+    {
+        super (colour);
+        this.locX = x;
+        this.locY = y;
+    }
+
+
+    public D2shape ()
+    {
+        this (0, 0, "black");
+    }
+
+
+    // =====================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the x and y coordinate and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.colour
+    // =====================================================================
+    public void get (Console c)
+    {
+        c.print ("Please enter a x-coordinate: ");
+        this.locX = c.readInt ();
+        c.print ("Please enter a y-coordinate: ");
+        this.locY = c.readInt ();
+        super.get (c);
+    }
+
+
+    // ===============================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the coordinates and colour in a given Console
+    // Input: Parameters(Console c)
+    // Output: Prints the coordinates and colour in a given Console
+    // ===============================================================
+    public void put (Console c)
+    {
+        c.println ("X-coordinate: " + locX);
+        c.println ("Y-coordinate: " + locY);
+        super.put (c);
+    }
+}
+
+
+// ====================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a circle class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      radius - the radius of the circle
+//      final pi - the value of pi rounded to 2 decimal places
+// Methods:
+//      calcPerimeter - calculates the perimeter(circumference) of the circle
+//      calcArea - calculates the area of the circle
+//      get - gets the radius, x and y coordinate and colour from a given Console
+//      put - prints the the shape as circle, radius,x and y coordinates, and the color of the Shape in a given Console
+// ====================================================================================================================
+class Circle extends D2shape
+{
+    public double radius;
+    public final double pi = 3.14;
+
+    public Circle (double radius, int x, int y, String colour)
+    {
+        super (x, y, colour);
+        if (radius > 0)
+        {
+            this.radius = radius;
+        }
+        else
+        {
+            this.radius = 1;
+        }
+    }
+
+
+    public Circle ()
+    {
+        this (1, 0, 0, "black");
+    }
+
+
+    // ==============================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the perimeter(circumference) if a circle
+    // Input: None
+    // Output: Returns the perimeter(circumference) of a circle
+    // ==============================================================
+    public double calcPerimeter ()
+    {
+        return (this.radius * 2 * pi);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the area of a circle
+    // Input: None
+    // Output: Returns the area of a circle
+    // ===========================================================
+    public double calcArea ()
+    {
+        return (this.radius * this.radius * pi);
+    }
+
+
+    // =====================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the radius, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.colour,this.radius
+    // =====================================================================
+    public void get (Console c)
+    {
+        this.radius = -1;
+        while (this.radius <= 0)
+        {
+            c.print ("Please enter a positive radius: ");
+            this.radius = c.readDouble ();
+            if (this.radius <= 0)
+            {
+                c.println ("You did not enter a valid radius. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // ===========================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, radius, coordinates, and colour of the circle
+    // Input: Parameters(Console c)
+    // Output: prints the the shape as circle, radius, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ===========================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Circle");
+        c.println ("Radius: " + this.radius + "units");
+        c.println ("Circumference: " + this.calcPerimeter () + "units");
+        c.println ("Area: " + this.calcArea () + "units^2");
+        super.put (c);
+
+    }
+}
+
+
+// =====================================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a rectangle class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      length - the length of the rectangle
+//      width - the width of the rectangle
+// Methods:
+//      calcPerimeter - calculates the perimeter of the rectangle
+//      calcArea - calculates the area of the rectangle
+//      get - gets the length, width, x and y coordinate and colour from a given Console
+//      put - prints the the shape as rectangle, length, width,x and y coordinates and the color of the Shape in a given Console
+// =====================================================================================================================================
+class Rectangle extends D2shape
+{
+    public double length;
+    public double width;
+
+    public Rectangle (double length, double width, int x, int y, String colour)
+    {
+        super (x, y, colour);
+        if (length > 0)
+        {
+            this.length = length;
+        }
+        else
+        {
+            this.length = 1;
+        }
+        if (width > 0)
+        {
+            this.width = width;
+        }
+        else
+        {
+            this.width = 1;
+        }
+    }
+
+
+    public Rectangle ()
+    {
+        this (1, 1, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the perimeter of a rectangle
+    // Input: None
+    // Output: Returns the perimeter of a rectangle
+    // ===========================================================
+    public double calcPerimeter ()
+    {
+        return (this.length * 2 + this.width * 2);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the area of a rectangle
+    // Input: None
+    // Output: Returns the area of a rectangle
+    // ===========================================================
+    public double calcArea ()
+    {
+        return (this.length * this.width);
+    }
+
+
+    // ========================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the length, width, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.colour,this.length, this.width
+    // ========================================================================
+    public void get (Console c)
+    {
+        this.length = -1;
+        while (this.length <= 0)
+        {
+            c.print ("Please enter a positive length: ");
+            this.length = c.readDouble ();
+            if (this.length <= 0)
+            {
+                c.println ("You did not enter a valid length. Please try again.");
+            }
+        }
+        this.width = -1;
+        while (this.width <= 0)
+        {
+            c.print ("Please enter a positive width: ");
+            this.width = c.readDouble ();
+            if (this.width <= 0)
+            {
+                c.println ("You did not enter a valid width. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // =====================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, length, width, coordinates, and colour of the rectangle
+    // Input: Parameters(Console c)
+    // Output: prints the the shape as rectangle, length, width, coordinates,
+    //         and the colour of the Shape in a given Console
+    // =====================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Rectangle");
+        c.println ("Length: " + this.length + "units");
+        c.println ("Width: " + this.width + "units");
+        c.println ("Perimeter: " + this.calcPerimeter () + "units");
+        c.println ("Area: " + this.calcArea () + "units^2");
+        super.put (c);
+
+    }
+}
+
+// ============================================================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a triangle class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      sideA - the length of the first side of the triangle
+//      sideB - the length of the second side of the triangle
+//      sideC - the length of the third side of the triangle
+// Methods:
+//      calcPerimeter - calculates the perimeter of the triangle
+//      calcArea - calculates the area of the triangle
+//      get - gets the first,second, and third side of the triangle, x and y coordinate and colour from a given Console
+//      put - prints the the shape as triangle, first,second, and third side of the triangle,x and y coordinates and the color of the Shape in a given Console
+// ============================================================================================================================================================
+class Triangle extends D2shape
+{
+    public double sideA;
+    public double sideB;
+    public double sideC;
+
+    public Triangle (double a, double b, double c, int x, int y, String colour)
+    {
+        super (x, y, colour);
+        if (a > 0)
+        {
+            this.sideA = a;
+        }
+        else
+        {
+            this.sideA = 1;
+        }
+        if (b > 0)
+        {
+            this.sideB = b;
+        }
+        else
+        {
+            this.sideB = 1;
+        }
+        if (c > 0)
+        {
+            this.sideC = c;
+        }
+        else
+        {
+            this.sideC = 1;
+        }
+        if (this.sideA + this.sideB <= sideC || this.sideA + this.sideC <= sideB || this.sideC + this.sideB <= sideA)
+        {
+            this.sideA = 1;
+            this.sideB = 1;
+            this.sideC = 1;
+        }
+    }
+
+
+    public Triangle ()
+    {
+        this (1, 1, 1, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the perimeter of a triangle
+    // Input: None
+    // Output: Returns the perimeter of a triangle
+    // ===========================================================
+    public double calcPerimeter ()
+    {
+        return (this.sideA + this.sideB + this.sideC);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the area of a triangle
+    // Input: None
+    // Output: Returns the area of a triangle
+    // ===========================================================
+    public double calcArea ()
+    {
+        double semi = (this.sideA + this.sideB + this.sideC) / 2;
+        return (Math.sqrt (semi * (semi - this.sideA) * (semi - this.sideB) * (semi - this.sideC)));
+    }
+
+
+    // ===============================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the three side lengths, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.colour,this.sideA,this.sideB,this.sideC
+    // ===============================================================================
+    public void get (Console c)
+    {
+        this.sideA = 1;
+        this.sideB = 1;
+        this.sideC = 2;
+        while (this.sideA + this.sideB <= sideC || this.sideA + this.sideC <= sideB || this.sideC + this.sideB <= sideA)
+        {
+            this.sideA = -1;
+            while (this.sideA <= 0)
+            {
+                c.print ("Please enter a positive length for the first side: ");
+                this.sideA = c.readDouble ();
+                if (this.sideA <= 0)
+                {
+                    c.println ("You did not enter a valid length. Please try again.");
+                }
+            }
+            this.sideB = -1;
+            while (this.sideB <= 0)
+            {
+                c.print ("Please enter a positive length for the second side: ");
+                this.sideB = c.readDouble ();
+                if (this.sideB <= 0)
+                {
+                    c.println ("You did not enter a valid length. Please try again.");
+                }
+            }
+            this.sideC = -1;
+            while (this.sideC <= 0)
+            {
+                c.print ("Please enter a positive length for the third side: ");
+                this.sideC = c.readDouble ();
+                if (this.sideC <= 0)
+                {
+                    c.println ("You did not enter a valid length. Please try again.");
+                }
+            }
+            if (this.sideA + this.sideB <= sideC || this.sideA + this.sideC <= sideB || this.sideC + this.sideB <= sideA)
+            {
+                c.println ("You cannot have a triangle with one side greater");
+                c.println ("than the sum of the two other sides. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // =================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, three sides, coordinates, and colour of the triangle
+    // Input: Parameters(Console c)
+    // Output: prints the the shape as triangle, three sides, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ==================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Triangle");
+        c.println ("First side: " + this.sideA + "units");
+        c.println ("Second side: " + this.sideB + "units");
+        c.println ("Third side: " + this.sideC + "units");
+        c.println ("Perimeter: " + this.calcPerimeter () + "units");
+        c.println ("Area: " + this.calcArea () + "units^2");
+        super.put (c);
+
+    }
+}
+
+
+// =====================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a regular pentagon class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      length - the length of each side of the pentagon
+// Methods:
+//      calcPerimeter - calculates the circumference of the pentagon
+//      calcArea - calculates the area of the pentagon
+//      get - gets the length, x and y coordinate and colour from a given Console
+//      put - prints the the shape as pentagon, length,x and y coordinates and the color of the Shape in a given Console
+// =====================================================================================================================
+class RegularPentagon extends D2shape
+{
+    public double length;
+
+    public RegularPentagon (double length, int x, int y, String colour)
+    {
+        super (x, y, colour);
+        if (length > 0)
+        {
+            this.length = length;
+        }
+        else
+        {
+            this.length = 1;
+        }
+    }
+
+
+    public RegularPentagon ()
+    {
+        this (1, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the perimeter of a regular pentagon
+    // Input: None
+    // Output: Returns the perimeter of a regular pentagon
+    // ===========================================================
+    public double calcPerimeter ()
+    {
+        return (this.length * 5);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the area of a regular pentagon
+    // Input: None
+    // Output: Returns the area of a regular pentagon
+    // ===========================================================
+    public double calcArea ()
+    {
+        return ((1.0 / 4) * Math.sqrt (5 * (5 + 2 * Math.sqrt (5))) * this.length * this.length);
+    }
+
+
+    // ==================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the length, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.colour,this.length
+    // ==================================================================
+    public void get (Console c)
+    {
+        this.length = -1;
+        while (this.length <= 0)
+        {
+            c.print ("Please enter a positive length: ");
+            this.length = c.readDouble ();
+            if (this.length <= 0)
+            {
+                c.println ("You did not enter a valid length. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // ======================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, length, coordinates, and colour of the regular pentagon
+    // Input: Parameters(Console c)
+    // Output: prints the the shape as regular pentagon, length, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ======================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Regular Pentagon");
+        c.println ("Length: " + this.length + "units");
+        c.println ("Perimeter: " + this.calcPerimeter () + "units");
+        c.println ("Area: " + this.calcArea () + "units^2");
+        super.put (c);
+
+    }
+}
+
+
+// =====================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a regular hexagon class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      length - the length of each side of the hexagon
+// Methods:
+//      calcPerimeter - calculates the circumference of the hexagon
+//      calcArea - calculates the area of the hexagon
+//      get - gets the length, x and y coordinate and colour from a given Console
+//      put - prints the the shape as hexagon, length,x and y coordinates and the color of the Shape in a given Console
+// =====================================================================================================================
+class RegularHexagon extends D2shape
+{
+    public double length;
+
+    public RegularHexagon (double length, int x, int y, String colour)
+    {
+        super (x, y, colour);
+        if (length > 0)
+        {
+            this.length = length;
+        }
+        else
+        {
+            this.length = 1;
+        }
+    }
+
+
+    public RegularHexagon ()
+    {
+        this (1, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the perimeter of a regular hexagon
+    // Input: None
+    // Output: Returns the perimeter of a regular hexagon
+    // ===========================================================
+    public double calcPerimeter ()
+    {
+        return (this.length * 6);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the area of a regular hexagon
+    // Input: None
+    // Output: Returns the area of a regular hexagon
+    // ===========================================================
+    public double calcArea ()
+    {
+        return ((3 * Math.sqrt (3)) / 2.0 * this.length * this.length);
+    }
+
+
+    // ==================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the length, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.colour,this.length
+    // ==================================================================
+    public void get (Console c)
+    {
+        this.length = -1;
+        while (this.length <= 0)
+        {
+            c.print ("Please enter a positive length: ");
+            this.length = c.readDouble ();
+            if (this.length <= 0)
+            {
+                c.println ("You did not enter a valid length. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // ======================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, length, coordinates, and colour of the regular hexagon
+    // Input: Parameters(Console c)
+    // Output: prints the the shape as regular hexagon, length, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ======================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Regular Hexagon");
+        c.println ("Length: " + this.length + "units");
+        c.println ("Perimeter: " + this.calcPerimeter () + "units");
+        c.println ("Area: " + this.calcArea () + "units^2");
+        super.put (c);
+    }
+}
+
+// =====================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a regular octagon class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      length - the length of each side of the octagon
+// Methods:
+//      calcPerimeter - calculates the circumference of the octagon
+//      calcArea - calculates the area of the octagon
+//      get - gets the length, x and y coordinate and colour from a given Console
+//      put - prints the the shape as octagon, length,x and y coordinates and the color of the Shape in a given Console
+// =====================================================================================================================
+class RegularOctagon extends D2shape
+{
+    public double length;
+
+    public RegularOctagon (double length, int x, int y, String colour)
+    {
+        super (x, y, colour);
+        if (length > 0)
+        {
+            this.length = length;
+        }
+        else
+        {
+            this.length = 1;
+        }
+    }
+
+
+    public RegularOctagon ()
+    {
+        this (1, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the perimeter of a regular octagon
+    // Input: None
+    // Output: Returns the perimeter of a regular octagon
+    // ===========================================================
+    public double calcPerimeter ()
+    {
+        return (this.length * 8);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the area of a regular octagon
+    // Input: None
+    // Output: Returns the area of a regular octagon
+    // ===========================================================
+    public double calcArea ()
+    {
+        return (2 * (1 + Math.sqrt (2)) * this.length * this.length);
+    }
+
+
+    // ==================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the length, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.colour,this.length
+    // ==================================================================
+    public void get (Console c)
+    {
+        this.length = -1;
+        while (this.length <= 0)
+        {
+            c.print ("Please enter a positive length: ");
+            this.length = c.readDouble ();
+            if (this.length <= 0)
+            {
+                c.println ("You did not enter a valid length. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // ======================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, length, coordinates, and colour of the regular octagon
+    // Input: Parameters(Console c)
+    // Output: prints the the shape as regular octagon, length, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ======================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Regular Octagon");
+        c.println ("Length: " + this.length + "units");
+        c.println ("Perimeter: " + this.calcPerimeter () + "units");
+        c.println ("Area: " + this.calcArea () + "units^2");
+        super.put (c);
+    }
+}
+
+
+// =====================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a regular decagon class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      length - the length of each side of the decagon
+// Methods:
+//      calcPerimeter - calculates the circumference of the decagon
+//      calcArea - calculates the area of the decagon
+//      get - gets the length, x and y coordinate and colour from a given Console
+//      put - prints the the shape as decagon, length,x and y coordinates and the color of the Shape in a given Console
+// =====================================================================================================================
+class RegularDecagon extends D2shape
+{
+    public double length;
+
+    public RegularDecagon (double length, int x, int y, String colour)
+    {
+        super (x, y, colour);
+        if (length > 0)
+        {
+            this.length = length;
+        }
+        else
+        {
+            this.length = 1;
+        }
+    }
+
+
+    public RegularDecagon ()
+    {
+        this (1, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the perimeter of a regular decagon
+    // Input: None
+    // Output: Returns the perimeter of a regular decagon
+    // ===========================================================
+    public double calcPerimeter ()
+    {
+        return (this.length * 10);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the area of a regular decagon
+    // Input: None
+    // Output: Returns the area of a regular decagon
+    // ===========================================================
+    public double calcArea ()
+    {
+        return ((5 / 2.0) * this.length * this.length * Math.sqrt (5 + 2 * Math.sqrt (5)));
+    }
+
+
+    // ==================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the length, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.colour,this.length
+    // ==================================================================
+    public void get (Console c)
+    {
+        this.length = -1;
+        while (this.length <= 0)
+        {
+            c.print ("Please enter a positive length: ");
+            this.length = c.readDouble ();
+            if (this.length <= 0)
+            {
+                c.println ("You did not enter a valid length. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // ======================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, length, coordinates, and colour of the regular decagon
+    // Input: Parameters(Console c)
+    // Output: prints the the shape as regular decagon, length, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ======================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Regular Decagon");
+        c.println ("Length: " + this.length + "units");
+        c.println ("Perimeter: " + this.calcPerimeter () + "units");
+        c.println ("Area: " + this.calcArea () + "units^2");
+        super.put (c);
+    }
+}
+
+
+// ===========================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a class for 3D shapes
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      locZ - the z coordinate of the shape
+// Methods:
+//      abstract calcVolume - calculates the volume of the 3D shape
+//      abstract calcSurfaceArea - calculates the surface area of the 3D shape
+//      get - gets the x, y, and z coordinate and colour from a given Console
+//      put - prints the x, y, and z coordinates and the color of the Shape in a given Console
+// ===========================================================================================
+abstract class D3shape extends Shape
+{
+    public int locX;
+    public int locY;
+    public int locZ;
+    abstract public double calcVolume ();
+    abstract public double calcSurfaceArea ();
+
+    public D3shape (int x, int y, int z, String colour)
+    {
+        super (colour);
+        this.locX = x;
+        this.locY = y;
+        this.locZ = z;
+    }
+
+
+    public D3shape ()
+    {
+        this (0, 0, 0, "black");
+    }
+
+
+    // =====================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the x, y, and z coordinate and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.z,this.colour
+    // =====================================================================
+    public void get (Console c)
+    {
+        c.print ("Please enter a x-coordinate: ");
+        this.locX = c.readInt ();
+        c.print ("Please enter a y-coordinate: ");
+        this.locY = c.readInt ();
+        c.print ("Please enter a z-coordinate: ");
+        this.locZ = c.readInt ();
+        super.get (c);
+    }
+
+
+    // ===============================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the coordinates and colour in a given Console
+    // Input: Parameters(Console c)
+    // Output: Prints the coordinates and colour in a given Console
+    // ===============================================================
+    public void put (Console c)
+    {
+        c.println ("X-coordinate: " + locX);
+        c.println ("Y-coordinate: " + locY);
+        c.println ("Z-coordinate: " + locZ);
+        super.put (c);
+    }
+}
+
+
+// =======================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a sphere class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      locZ - the z coordinate of the shape
+//      radius - the radius of the sphere
+//      final pi - the value of pi rounded to 2 decimal places
+// Methods:
+//      calcVolume - calculates the volume of the sphere
+//      calcSurfaceArea - calculates the surface area of the sphere
+//      get - gets the radius, x, y, and z coordinate and colour from a given Console
+//      put - prints the the shape as sphere, radius,x, y, and z coordinates and the color of the Shape in a given Console
+// =======================================================================================================================
+class Sphere extends D3shape
+{
+    public double radius;
+    public final double pi = 3.14;
+
+    public Sphere (double radius, int x, int y, int z, String colour)
+    {
+        super (x, y, z, colour);
+        if (radius > 0)
+        {
+            this.radius = radius;
+        }
+        else
+        {
+            this.radius = 1;
+        }
+    }
+
+
+    public Sphere ()
+    {
+        this (1, 0, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the volume of a sphere
+    // Input: None
+    // Output: Returns the volume of a sphere
+    // ===========================================================
+    public double calcVolume ()
+    {
+        return ((4 / 3.0) * pi * this.radius * this.radius * this.radius);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the surface area of a sphere
+    // Input: None
+    // Output: Returns the surface area of a sphere
+    // ===========================================================
+    public double calcSurfaceArea ()
+    {
+        return (4 * pi * this.radius * this.radius);
+    }
+
+
+    // ==================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the radius, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.z,this.colour,this.radius
+    // ==================================================================
+    public void get (Console c)
+    {
+        this.radius = -1;
+        while (this.radius <= 0)
+        {
+            c.print ("Please enter a positive radius: ");
+            this.radius = c.readDouble ();
+            if (this.radius <= 0)
+            {
+                c.println ("You did not enter a valid radius. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // ======================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, radius, coordinates, and colour of the sphere
+    // Input: Parameters(Console c)
+    // Output: prints the the shape sphere, radius, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ======================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Sphere");
+        c.println ("Radius: " + this.radius + "units");
+        c.println ("Volume: " + this.calcVolume () + "units^3");
+        c.println ("Surface Area: " + this.calcSurfaceArea () + "units^2");
+        super.put (c);
+
+    }
+}
+
+
+// ========================================================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a Rectangular Prism class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      locZ - the z coordinate of the shape
+//      length - the length of the rectangular prism
+//      width - the width of the rectangular prism
+//      height - the height of the rectangular prism
+// Methods:
+//      calcVolume - calculates the volume of the rectangular prism
+//      calcSurfaceArea - calculates the surface area of the rectangular prism
+//      get - gets the length, width, height, x, y, and z coordinate and colour from a given Console
+//      put - prints the the shape as rectangular prism, length, width, height, radius,x, y, and z coordinates and the color of the Shape in a given Console
+// =========================================================================================================================================================
+class RectangularPrism extends D3shape
+{
+    public double length;
+    public double width;
+    public double height;
+
+    public RectangularPrism (double length, double width, double height, int x, int y, int z, String colour)
+    {
+        super (x, y, z, colour);
+        if (length > 0)
+        {
+            this.length = length;
+        }
+        else
+        {
+            this.length = 1;
+        }
+        if (width > 0)
+        {
+            this.width = width;
+        }
+        else
+        {
+            this.width = 1;
+        }
+        if (height > 0)
+        {
+            this.height = height;
+        }
+        else
+        {
+            this.height = 1;
+        }
+    }
+
+
+    public RectangularPrism ()
+    {
+        this (1, 1, 1, 0, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the volume of a rectangular prism
+    // Input: None
+    // Output: Returns the volume of a rectangular prism
+    // ===========================================================
+    public double calcVolume ()
+    {
+        return (this.length * this.width * this.height);
+    }
+
+
+    // =============================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the surface area of a rectangular prism
+    // Input: None
+    // Output: Returns the surface area of a rectangular prism
+    // =============================================================
+    public double calcSurfaceArea ()
+    {
+        return (this.length * this.width * 2 + this.length * this.height * 2 + this.width * this.height * 2);
+    }
+
+
+    // ===================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the length, width, height, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.z,this.colour,this.legnth,this.width,this.height
+    // ===================================================================================
+    public void get (Console c)
+    {
+        this.length = -1;
+        while (this.length <= 0)
+        {
+            c.print ("Please enter a positive length: ");
+            this.length = c.readDouble ();
+            if (this.length <= 0)
+            {
+                c.println ("You did not enter a valid length. Please try again.");
+            }
+        }
+        this.width = -1;
+        while (this.width <= 0)
+        {
+            c.print ("Please enter a positive width: ");
+            this.width = c.readDouble ();
+            if (this.width <= 0)
+            {
+                c.println ("You did not enter a valid width. Please try again.");
+            }
+        }
+        this.height = -1;
+        while (this.height <= 0)
+        {
+            c.print ("Please enter a positive height: ");
+            this.height = c.readDouble ();
+            if (this.height <= 0)
+            {
+                c.println ("You did not enter a valid height. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // ====================================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, length, width, height, coordinates, and colour of the rectangular prism
+    // Input: Parameters(Console c)
+    // Output: prints the the shape rectangular prism, length, width, height, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ====================================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Rectangular Prism");
+        c.println ("Length: " + this.length + "units");
+        c.println ("Width: " + this.width + "units");
+        c.println ("Height: " + this.height + "units");
+        c.println ("Volume: " + this.calcVolume () + "units^3");
+        c.println ("Surface Area: " + this.calcSurfaceArea () + "units^2");
+        super.put (c);
+
+    }
+}
+
+
+// =================================================================================================================================
+// Author: Jackson Cai
+// Date: 11/3/2018
+// Purpose: To create a cylinder class
+// Fields:
+//      colour - the colour of the shape
+//      locX - the x coordinate of the shape
+//      locY - the y coordinate of the shape
+//      locZ - the z coordinate of the shape
+//      radius - the radius of the cylinder
+//      height - the height of the cylinder
+//      final pi - the value of pi rounded to 2 decimal places
+// Methods:
+//      calcVolume - calculates the volume of the cylinder
+//      calcSurfaceArea - calculates the surface area of the cylinder
+//      get - gets the radius, height, x, y, and z coordinate and colour from a given Console
+//      put - prints the the shape as cylinder, radius, height, x, y, and z coordinates and the color of the Shape in a given Console
+// ==================================================================================================================================
+class Cylinder extends D3shape
+{
+    public double radius;
+    public double height;
+    public final double pi = 3.14;
+
+    public Cylinder (double radius, double height, int x, int y, int z, String colour)
+    {
+        super (x, y, z, colour);
+        if (radius > 0)
+        {
+            this.radius = radius;
+        }
+        else
+        {
+            this.radius = 1;
+        }
+        if (height > 0)
+        {
+            this.height = height;
+        }
+        else
+        {
+            this.height = 1;
+        }
+    }
+
+
+    public Cylinder ()
+    {
+        this (1, 1, 0, 0, 0, "black");
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the volume of a cylinder
+    // Input: None
+    // Output: Returns the volume of a cylinder
+    // ===========================================================
+    public double calcVolume ()
+    {
+        return (this.pi * this.radius * this.radius * this.height);
+    }
+
+
+    // ===========================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To calculate the surface area of a cylinder
+    // Input: None
+    // Output: Returns the surface area of a cylinder
+    // ===========================================================
+    public double calcSurfaceArea ()
+    {
+        return (2 * this.pi * this.radius * this.height + 2 * this.pi * this.radius * this.radius);
+    }
+
+
+    // ===================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To get the radius, height, coordinates and colour from the user
+    // Input: Parameters(Console c)
+    // Output: Changes this.x,this.y,this.z,this.colour,this.radius,this.height
+    // ===================================================================================
+    public void get (Console c)
+    {
+        this.radius = -1;
+        while (this.radius <= 0)
+        {
+            c.print ("Please enter a positive radius: ");
+            this.radius = c.readDouble ();
+            if (this.radius <= 0)
+            {
+                c.println ("You did not enter a valid radius. Please try again.");
+            }
+        }
+        this.height = -1;
+        while (this.height <= 0)
+        {
+            c.print ("Please enter a positive height: ");
+            this.height = c.readDouble ();
+            if (this.height <= 0)
+            {
+                c.println ("You did not enter a valid height. Please try again.");
+            }
+        }
+        super.get (c);
+    }
+
+
+    // ====================================================================================================
+    // Author: Jackson
+    // Date: 11/3/2018
+    // Purpose: To print the shape, radius, height, coordinates, and colour of the rectangular prism
+    // Input: Parameters(Console c)
+    // Output: prints the the shape cylinder, radius, height, coordinates,
+    //         and the colour of the Shape in a given Console
+    // ====================================================================================================
+    public void put (Console c)
+    {
+        c.println ("Shape: Cylinder");
+        c.println ("Radius: " + this.radius + "units");
+        c.println ("Height: " + this.height + "units");
+        c.println ("Volume: " + this.calcVolume () + "units^3");
+        c.println ("Surface Area: " + this.calcSurfaceArea () + "units^2");
+        super.put (c);
+
+    }
+}
+
+
